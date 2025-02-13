@@ -1,4 +1,4 @@
-from app import app, supabase_client, get_db_connection
+from app import app #, supabase_client, get_db_connection
 from flask import jsonify, request
 from utils.logger import logging
 from model.user_auth_model import User_Auth_Model

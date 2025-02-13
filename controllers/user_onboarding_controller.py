@@ -1,12 +1,10 @@
-from app import app, supabase_client, get_db_connection
+from app import app #, supabase_client, get_db_connection
 from flask import jsonify, request
 from utils.logger import logging
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from utils.jwt_utils import jwt_blacklist
 from model.user_onboarding_model import UserOnboardingmodel
 import os
-
-
 
 @app.route('/api/onboarding/age', methods=['POST'])
 @jwt_required()
