@@ -1,0 +1,8 @@
+supabase 
+psycopg2 
+flask 
+flask_jwt_extended
+psycopg2
+python-dotenv
+bcrypt
+requests
