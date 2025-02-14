@@ -298,7 +298,6 @@ CREATE TABLE user_recommendation_entries (
 ); 
 ```
 
-
 ## Technologies Used
 - Flask
 - PostgreSQL
