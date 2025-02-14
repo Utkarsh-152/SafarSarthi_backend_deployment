@@ -31,8 +31,8 @@ def get_db_connection():
 with app.app_context():
     from controllers.user_auth_controller import *
     from controllers.user_onboarding_controller import *
-
-
+    from controllers.home_screen_controller import *
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

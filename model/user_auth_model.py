@@ -9,7 +9,7 @@ from config.verifyEmail import VerifyEmail
 import sys
 from config.config import POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PORT
 
-class User_Auth_Model:
+class UserAuthModel:
     def __init__(self):
         try:
             self.connection = psycopg2.connect(
