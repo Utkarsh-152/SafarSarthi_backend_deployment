@@ -252,6 +252,53 @@ Common HTTP Status Codes:
 - 401: Unauthorized (invalid or missing token)
 - 500: Internal Server Error
 
+## Database Table schemas
+### user_db: stores data during user registration
+
+```SQL
+CREATE TABLE user_db (
+    id serial PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+```SQL user_profile: stores basic data of a user like age, gender, location etc.
+-- First, create the ENUM type for gender
+CREATE TYPE gender_enum AS ENUM ('Male', 'Female', 'Other');
+
+-- Now, create the user_profile table
+CREATE TABLE user_profile (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    age INT DEFAULT NULL,
+    bio TEXT DEFAULT NULL,
+    gender gender_enum DEFAULT NULL,  -- Use ENUM type
+    interest TEXT DEFAULT NULL,
+    location VARCHAR(255) DEFAULT NULL,
+    occupation VARCHAR(100) DEFAULT NULL,
+    videos JSON DEFAULT NULL,
+    prompt TEXT DEFAULT NULL,
+    profile_photo JSON DEFAULT NULL,
+    FOREIGN KEY (user_id) REFERENCES user_db(id) ON DELETE CASCADE
+);
+```
+```SQL
+CREATE TABLE user_recommendation_entries (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,  -- The user for whom recommendations are generated
+    recommended_user_id INT NOT NULL,  -- The recommended user
+    similarity_score FLOAT DEFAULT NULL,  -- Optional similarity score
+    rank INT NOT NULL,  -- Rank of the recommendation
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Track when the recommendation was generated
+    FOREIGN KEY (user_id) REFERENCES user_db(id) ON DELETE CASCADE,
+    FOREIGN KEY (recommended_user_id) REFERENCES user_db(id) ON DELETE CASCADE,
+    UNIQUE (user_id, recommended_user_id)  -- Ensures a user can't have duplicate recommendations
+); 
+```
+
+
 ## Technologies Used
 - Flask
 - PostgreSQL
