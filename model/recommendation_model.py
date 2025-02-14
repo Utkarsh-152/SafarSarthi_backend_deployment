@@ -15,9 +15,7 @@ class RecommendationModel:
         try:
             self.embed_model = HuggingFaceEmbeddings(
                 model_name="sentence-transformers/all-mpnet-base-v2"
-            )
-            self.vectordb_file_path = "./faiss_index"
-            
+            )            
             self.connection = psycopg2.connect(
                 host=POSTGRES_HOST,
                 database=POSTGRES_DB,
