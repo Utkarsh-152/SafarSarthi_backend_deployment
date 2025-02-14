@@ -253,7 +253,8 @@ Common HTTP Status Codes:
 - 500: Internal Server Error
 
 ## Database Table schemas
-### user_db: stores data during user registration
+### user_db: 
+stores data during user registration
 
 ```SQL
 CREATE TABLE user_db (
@@ -265,7 +266,8 @@ CREATE TABLE user_db (
 );
 ```
 
-### user_profile: stores basic data of a user like age, gender, location etc.
+### user_profile: 
+stores basic data of a user like age, gender, location etc.
 ```SQL
 -- First, create the ENUM type for gender
 CREATE TYPE gender_enum AS ENUM ('Male', 'Female', 'Other');
@@ -287,7 +289,8 @@ CREATE TABLE user_profile (
 );
 ```
 
-### user_recommendation_entries: recommendation model data for recommeding users with similar interests and location
+### user_recommendation_entries: 
+recommendation model data for recommeding users with similar interests and location
 ```SQL
 CREATE TABLE user_recommendation_entries (
     id SERIAL PRIMARY KEY,
