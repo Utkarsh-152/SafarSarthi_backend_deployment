@@ -1,5 +1,5 @@
 from app import app
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
 from model.recommendation_model import RecommendationModel
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from utils.logger import logging
@@ -11,18 +11,17 @@ recommendation_model = RecommendationModel()
 def get_recommendations():
     try:
         logging.info("Getting recommendations")
-
         
-        logging.info("Getting user")
-        # Get user_id from JWT token
+        # Get username from JWT token
         username = get_jwt_identity()
-        logging.info(f"user Id: {username}")
+        logging.info(f"Username from token: {username}")
         
-        logging.info(f"Getting recommendations for user: {username}")
         # Get recommendations from the model
-        recommendations, status_code = recommendation_model.get_recommendations(username=username)
+        recommendations, status_code = recommendation_model.get_recommendations(username)
+        logging.info(f"Recommendations received: {recommendations}")
         
         return jsonify(recommendations), status_code
         
     except Exception as e:
+        logging.error(f"Error in get_recommendations: {str(e)}")
         return jsonify({"error": str(e)}), 500 
