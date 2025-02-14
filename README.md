@@ -264,7 +264,9 @@ CREATE TABLE user_db (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-```SQL user_profile: stores basic data of a user like age, gender, location etc.
+
+### user_profile: stores basic data of a user like age, gender, location etc.
+```SQL
 -- First, create the ENUM type for gender
 CREATE TYPE gender_enum AS ENUM ('Male', 'Female', 'Other');
 
@@ -284,6 +286,8 @@ CREATE TABLE user_profile (
     FOREIGN KEY (user_id) REFERENCES user_db(id) ON DELETE CASCADE
 );
 ```
+
+### user_recommendation_entries: recommendation model data for recommeding users with similar interests and location
 ```SQL
 CREATE TABLE user_recommendation_entries (
     id SERIAL PRIMARY KEY,
