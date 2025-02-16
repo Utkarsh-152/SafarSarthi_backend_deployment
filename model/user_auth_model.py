@@ -7,7 +7,7 @@ from utils.logger import logging
 from utils.exception import CustomException
 from config.verifyEmail import VerifyEmail
 import sys
-from config.config import POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PORT
+from config.config import *
 
 class UserAuthModel:
     def __init__(self):
