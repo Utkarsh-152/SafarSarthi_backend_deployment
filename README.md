@@ -305,6 +305,38 @@ CREATE TABLE user_recommendation_entries (
 ); 
 ```
 
+### swipe_logs: 
+user swipe logs data
+```SQL
+CREATE TYPE swipe_direction_enum AS ENUM ('left', 'right');
+
+CREATE TABLE swipe_logs (
+    swipe_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    target_user_id INT NOT NULL,
+    swipe_direction swipe_direction_enum NOT NULL,
+    swiped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user_db(id) ON DELETE CASCADE,
+    FOREIGN KEY (target_user_id) REFERENCES user_db(id) ON DELETE CASCADE
+); 
+```
+
+### matches:
+user right swipe match data, if both user have right swipe direction they can chat.
+```SQL
+CREATE TABLE matches (
+    match_id SERIAL PRIMARY KEY,
+    user1_id INT NOT NULL,
+    user2_id INT NOT NULL,
+    matched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (user1_id) REFERENCES user_db(id) ON DELETE CASCADE,
+    FOREIGN KEY (user2_id) REFERENCES user_db(id) ON DELETE CASCADE,
+    CONSTRAINT unique_match UNIQUE (user1_id, user2_id),
+    CONSTRAINT no_self_match CHECK (user1_id <> user2_id)
+);
+```
+
 ## Technologies Used
 - Flask
 - PostgreSQL
