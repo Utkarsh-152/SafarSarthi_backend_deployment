@@ -10,22 +10,39 @@ class SwipeModel:
     DAILY_SWIPE_LIMIT = 10
     
     def __init__(self):
+        self.connection = None
+        self.cursor = None
+        
+    def get_db_connection(self):
+        """Get database connection"""
         try:
-           self.connection = psycopg2.connect(
-               host=POSTGRES_HOST,
-                database=POSTGRES_DB,
-                user=POSTGRES_USER,
-                password=POSTGRES_PASSWORD,
-                port=POSTGRES_PORT
-           )
-           self.cursor = self.connection.cursor(cursor_factory=DictCursor)
+            if not self.connection or self.connection.closed:
+                self.connection = psycopg2.connect(
+                    host=POSTGRES_HOST,
+                    database=POSTGRES_DB,
+                    user=POSTGRES_USER,
+                    password=POSTGRES_PASSWORD,
+                    port=POSTGRES_PORT
+                )
+                self.cursor = self.connection.cursor(cursor_factory=DictCursor)
         except Exception as e:
             logging.error(f"Error connecting to database: {e}")
             raise CustomException(e, sys)
             
+    def close_connection(self):
+        """Close database connection"""
+        try:
+            if self.cursor:
+                self.cursor.close()
+            if self.connection:
+                self.connection.close()
+        except Exception as e:
+            logging.error(f"Error closing database connection: {e}")
+            
     def get_remaining_swipes(self, user_id):
         """Calculate remaining swipes for the day"""
         try:
+            self.get_db_connection()
             # Get swipes made in the last 24 hours
             query = """
                 SELECT COUNT(*) as swipe_count
@@ -48,10 +65,13 @@ class SwipeModel:
         except Exception as e:
             logging.error(f"Error getting remaining swipes: {e}")
             return {"status": "error", "message": str(e)}
+        finally:
+            self.close_connection()
             
     def process_swipe(self, user_id, target_user_id, direction):
         """Process a swipe action and check for matches"""
         try:
+            self.get_db_connection()
             # Check remaining swipes
             remaining = self.get_remaining_swipes(user_id)
             if remaining["status"] == "error":
@@ -111,13 +131,17 @@ class SwipeModel:
             }
             
         except Exception as e:
-            self.connection.rollback()
+            if self.connection:
+                self.connection.rollback()
             logging.error(f"Error processing swipe: {e}")
             return {"status": "error", "message": str(e)}
+        finally:
+            self.close_connection()
             
     def get_matches(self, user_id):
         """Get all active matches for a user"""
         try:
+            self.get_db_connection()
             query = """
                 SELECT 
                     m.match_id,
@@ -153,5 +177,7 @@ class SwipeModel:
         except Exception as e:
             logging.error(f"Error getting matches: {e}")
             return {"status": "error", "message": str(e)}
+        finally:
+            self.close_connection()
             
     
